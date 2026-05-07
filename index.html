@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attack Simulation Training — Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-card">
+            <div class="login-icon">🛡️</div>
+            <h1>Attack Simulation Training</h1>
+            <p>Sign in with your Microsoft 365 account to view simulation reports.</p>
+            <button id="btn-login" class="btn-primary btn-login" onclick="signIn()">
+                <svg width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+                Sign in with Microsoft
+            </button>
+            <div id="login-error" class="login-error" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard" style="display:none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="header-icon">🛡️</span>
+                <div>
+                    <h1>Attack Simulation Training</h1>
+                    <p class="header-subtitle">Security Awareness Dashboard</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <span id="last-updated" class="last-updated"></span>
+                <button id="btn-refresh" class="btn-icon" onclick="refreshData()" title="Refresh data">
+                    <svg class="refresh-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                </button>
+                <div class="user-info">
+                    <span id="user-name" class="user-name"></span>
+                    <button class="btn-text" onclick="signOut()">Sign out</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display:none;">
+            <div class="spinner"></div>
+            <p>Loading simulation data...</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <section class="kpi-section">
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-total">📊</div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="kpi-total">—</span>
+                    <span class="kpi-label">Total Simulations</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-running">▶️</div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="kpi-active">—</span>
+                    <span class="kpi-label">Active / Scheduled</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-success">✅</div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="kpi-succeeded">—</span>
+                    <span class="kpi-label">Completed</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-compromised">⚠️</div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="kpi-avg-compromise">—</span>
+                    <span class="kpi-label">Avg Compromise Rate</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-users">👥</div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="kpi-total-users">—</span>
+                    <span class="kpi-label">Total Users Targeted</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-training">📚</div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="kpi-training">—</span>
+                    <span class="kpi-label">Users Assigned Training</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Row -->
+        <section class="charts-section">
+            <div class="chart-card">
+                <h3>Simulation Status Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="chart-status"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Attack Technique Breakdown</h3>
+                <div class="chart-container">
+                    <canvas id="chart-technique"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Compromise Rate Trend</h3>
+                <div class="chart-container">
+                    <canvas id="chart-trend"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Second Charts Row -->
+        <section class="charts-section">
+            <div class="chart-card chart-wide">
+                <h3>Simulations Timeline</h3>
+                <div class="chart-container chart-container-wide">
+                    <canvas id="chart-timeline"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Delivery Platform</h3>
+                <div class="chart-container">
+                    <canvas id="chart-platform"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulations Table -->
+        <section class="table-section">
+            <div class="table-header">
+                <h3>All Simulations</h3>
+                <div class="table-controls">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search simulations..." oninput="filterTable()">
+                    <select id="filter-status" class="filter-select" onchange="filterTable()">
+                        <option value="">All Statuses</option>
+                        <option value="succeeded">Succeeded</option>
+                        <option value="running">Running</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="failed">Failed</option>
+                        <option value="canceled">Canceled</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                    <select id="filter-technique" class="filter-select" onchange="filterTable()">
+                        <option value="">All Techniques</option>
+                        <option value="credentialHarvesting">Credential Harvesting</option>
+                        <option value="attachmentMalware">Attachment Malware</option>
+                        <option value="driveByUrl">Drive-by URL</option>
+                        <option value="linkInAttachment">Link in Attachment</option>
+                        <option value="linkToMalwareFile">Link to Malware</option>
+                        <option value="oAuthConsentGrant">OAuth Consent</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="simulations-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" onclick="sortTable('displayName')">Name <span class="sort-arrow">↕</span></th>
+                            <th class="sortable" onclick="sortTable('status')">Status <span class="sort-arrow">↕</span></th>
+                            <th class="sortable" onclick="sortTable('attackTechnique')">Technique <span class="sort-arrow">↕</span></th>
+                            <th>Platform</th>
+                            <th class="sortable" onclick="sortTable('launchDateTime')">Launch Date <span class="sort-arrow">↕</span></th>
+                            <th class="sortable" onclick="sortTable('completionDateTime')">Completion <span class="sort-arrow">↕</span></th>
+                            <th>Duration</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="simulations-tbody"></tbody>
+                </table>
+            </div>
+            <div id="no-results" class="no-results" style="display:none;">No simulations match your filters.</div>
+        </section>
+
+        <!-- Simulation Detail Modal -->
+        <div id="detail-modal" class="modal" style="display:none;" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Data sourced from Microsoft Graph API — Attack Simulation & Training</p>
+        </footer>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
