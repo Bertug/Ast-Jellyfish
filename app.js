@@ -141,14 +141,14 @@ function animateNumber(elementId, target) {
 // ============================================================
 
 const CHART_COLORS = {
-    blue: '#3b82f6',
+    blue: '#e63946',
     green: '#10b981',
-    red: '#ef4444',
-    orange: '#f59e0b',
+    red: '#ff2e4c',
+    orange: '#ff6b35',
     purple: '#8b5cf6',
     cyan: '#06b6d4',
     pink: '#ec4899',
-    gray: '#64748b',
+    gray: '#5c5470',
     indigo: '#6366f1',
     teal: '#14b8a6',
 };
