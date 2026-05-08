@@ -186,15 +186,15 @@ const TECHNIQUE_COLORS = {
 
 function getChartDefaults() {
     return {
-        color: '#8fa4b8',
-        borderColor: '#243b53',
+        color: '#a89bb5',
+        borderColor: '#2a2535',
         font: { family: "'Segoe UI', sans-serif" }
     };
 }
 
 function renderCharts() {
-    Chart.defaults.color = '#8fa4b8';
-    Chart.defaults.borderColor = '#243b53';
+    Chart.defaults.color = '#a89bb5';
+    Chart.defaults.borderColor = '#2a2535';
     Chart.defaults.font.family = "'Segoe UI', sans-serif";
 
     renderStatusChart();
@@ -230,7 +230,7 @@ function renderStatusChart() {
             datasets: [{
                 data: data,
                 backgroundColor: colors,
-                borderColor: '#1a2d40',
+                borderColor: '#16141f',
                 borderWidth: 2,
                 hoverOffset: 6,
             }]
@@ -284,7 +284,7 @@ function renderTechniqueChart() {
                 x: {
                     beginAtZero: true,
                     ticks: { stepSize: 1 },
-                    grid: { color: '#243b5340' }
+                    grid: { color: '#2a253540' }
                 },
                 y: {
                     grid: { display: false },
@@ -340,7 +340,7 @@ function renderTrendChart() {
                 pointRadius: 4,
                 pointHoverRadius: 6,
                 pointBackgroundColor: CHART_COLORS.red,
-                pointBorderColor: '#1a2d40',
+                pointBorderColor: '#16141f',
                 pointBorderWidth: 2,
             }]
         },
@@ -358,13 +358,13 @@ function renderTrendChart() {
             },
             scales: {
                 x: {
-                    grid: { color: '#243b5340' },
+                    grid: { color: '#2a253540' },
                     ticks: { maxRotation: 45, font: { size: 10 } }
                 },
                 y: {
                     beginAtZero: true,
                     max: 100,
-                    grid: { color: '#243b5340' },
+                    grid: { color: '#2a253540' },
                     ticks: {
                         callback: v => v + '%',
                         font: { size: 11 }
@@ -447,7 +447,7 @@ function renderTimelineChart() {
                     stacked: true,
                     beginAtZero: true,
                     ticks: { stepSize: 1 },
-                    grid: { color: '#243b5340' }
+                    grid: { color: '#2a253540' }
                 }
             }
         }
@@ -494,7 +494,7 @@ function renderPlatformChart() {
             },
             scales: {
                 r: {
-                    grid: { color: '#243b5340' },
+                    grid: { color: '#2a253540' },
                     ticks: { display: false }
                 }
             }

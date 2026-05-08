@@ -51,33 +51,29 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: radial-gradient(ellipse at 50% 80%, #1a0a10 0%, #0a0a0f 70%);
+    background: #050508 url('redjellyright.png') center/cover no-repeat fixed;
+    position: relative;
     overflow: hidden;
+}
+.login-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 5, 10, 0.7);
+    backdrop-filter: blur(2px);
 }
 
 .login-card {
-    background: rgba(22, 20, 31, 0.85);
+    position: relative;
+    background: rgba(10, 10, 15, 0.8);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(230, 57, 70, 0.2);
+    border: 1px solid rgba(230, 57, 70, 0.25);
     border-radius: var(--radius-lg);
     padding: 48px 40px;
     text-align: center;
     max-width: 440px;
     width: 90%;
     box-shadow: var(--shadow-lg), var(--glow-red);
-}
-
-.login-jellyfish {
-    margin-bottom: 20px;
-}
-
-.jellyfish-img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid rgba(230, 57, 70, 0.4);
-    box-shadow: 0 0 30px rgba(230, 57, 70, 0.3);
 }
 
 .login-card h1 {
@@ -420,7 +416,7 @@ body {
 
 .search-input:focus, .filter-select:focus {
     outline: none;
-    border-color: var(--accent-blue);
+    border-color: #e63946;
 }
 
 .search-input {
@@ -459,12 +455,12 @@ th.sortable {
     transition: color var(--transition);
 }
 th.sortable:hover {
-    color: var(--accent-blue);
+    color: #e63946;
 }
 
 th.sorted-asc .sort-arrow,
 th.sorted-desc .sort-arrow {
-    color: var(--accent-blue);
+    color: #e63946;
 }
 
 .sort-arrow {
@@ -496,7 +492,7 @@ tbody tr:hover {
 }
 
 .badge-succeeded { background: rgba(16,185,129,0.15); color: var(--accent-green); }
-.badge-running { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+.badge-running { background: rgba(230,57,70,0.15); color: #e63946; }
 .badge-scheduled { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
 .badge-failed { background: rgba(239,68,68,0.15); color: var(--accent-red); }
 .badge-canceled { background: rgba(92,122,148,0.15); color: var(--text-muted); }
@@ -511,9 +507,9 @@ tbody tr:hover {
     border-radius: var(--radius-sm);
     font-size: 11px;
     font-weight: 500;
-    background: rgba(59,130,246,0.1);
-    color: var(--accent-blue);
-    border: 1px solid rgba(59,130,246,0.2);
+    background: rgba(230,57,70,0.1);
+    color: #e63946;
+    border: 1px solid rgba(230,57,70,0.2);
 }
 
 /* Compromise rate bar */
