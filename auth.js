@@ -50,6 +50,8 @@ async function initializeMsal() {
     if (accounts.length > 0) {
         currentAccount = accounts[0];
         showDashboard();
+    } else {
+        document.getElementById('login-screen').style.display = 'flex';
     }
 }
 
@@ -89,15 +91,27 @@ function signOut() {
     msalInstance.logoutRedirect({ postLogoutRedirectUri: 'http://localhost:8080/' });
 }
 
-// Get Access Token (silent, fallback to redirect)
+// Get Access Token (silent, fallback to redirect only on interaction required)
 async function getAccessToken() {
     const request = { ...tokenRequest, account: currentAccount };
     try {
         const response = await msalInstance.acquireTokenSilent(request);
         return response.accessToken;
     } catch (error) {
-        // If silent fails, redirect for new token
-        await msalInstance.acquireTokenRedirect(request);
+        if (error instanceof msal.InteractionRequiredAuthError) {
+            await msalInstance.acquireTokenRedirect(request);
+        } else {
+            // Retry once with forceRefresh before giving up
+            try {
+                const response = await msalInstance.acquireTokenSilent({ ...request, forceRefresh: true });
+                return response.accessToken;
+            } catch (retryError) {
+                if (retryError instanceof msal.InteractionRequiredAuthError) {
+                    await msalInstance.acquireTokenRedirect(request);
+                }
+                throw retryError;
+            }
+        }
     }
 }
 
