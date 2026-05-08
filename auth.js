@@ -25,6 +25,7 @@ const tokenRequest = {
 
 let msalInstance = null;
 let currentAccount = null;
+let cachedAccessToken = null;
 
 // Initialize MSAL and handle redirect response
 async function initializeMsal() {
@@ -38,6 +39,7 @@ async function initializeMsal() {
         const response = await msalInstance.handleRedirectPromise();
         if (response) {
             currentAccount = response.account;
+            cachedAccessToken = response.accessToken;
             showDashboard();
             return;
         }
@@ -91,26 +93,26 @@ function signOut() {
     msalInstance.logoutRedirect({ postLogoutRedirectUri: 'http://localhost:8080/' });
 }
 
-// Get Access Token (silent, fallback to redirect only on interaction required)
+// Get Access Token (silent, fallback to popup — never redirect)
 async function getAccessToken() {
+    // Use cached token from redirect response if available
+    if (cachedAccessToken) {
+        const token = cachedAccessToken;
+        cachedAccessToken = null;
+        return token;
+    }
     const request = { ...tokenRequest, account: currentAccount };
     try {
         const response = await msalInstance.acquireTokenSilent(request);
         return response.accessToken;
     } catch (error) {
-        if (error instanceof msal.InteractionRequiredAuthError) {
-            await msalInstance.acquireTokenRedirect(request);
-        } else {
-            // Retry once with forceRefresh before giving up
-            try {
-                const response = await msalInstance.acquireTokenSilent({ ...request, forceRefresh: true });
-                return response.accessToken;
-            } catch (retryError) {
-                if (retryError instanceof msal.InteractionRequiredAuthError) {
-                    await msalInstance.acquireTokenRedirect(request);
-                }
-                throw retryError;
-            }
+        // Use popup instead of redirect to avoid double sign-in
+        try {
+            const response = await msalInstance.acquireTokenPopup(request);
+            return response.accessToken;
+        } catch (popupError) {
+            console.error('Token acquisition failed:', popupError);
+            throw popupError;
         }
     }
 }

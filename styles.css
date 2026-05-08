@@ -1,6 +1,6 @@
 /* ========== CSS Variables / Theme ========== */
 :root {
-    --bg-primary: #0a0a0f;
+    --bg-primary: #050508;
     --bg-secondary: #12111a;
     --bg-card: #16141f;
     --bg-card-hover: #1e1b2a;
@@ -51,7 +51,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: #050508 url('redjellyright.png') center/cover no-repeat fixed;
+    background: #050508 url('RedJellyRight.png') center/cover no-repeat fixed;
     position: relative;
     overflow: hidden;
 }
@@ -286,14 +286,14 @@ body {
 
 .kpi-card {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(230, 57, 70, 0.25);
     border-radius: var(--radius-md);
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 16px;
     transition: all var(--transition);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm), var(--glow-red);
 }
 .kpi-card:hover {
     border-color: rgba(230, 57, 70, 0.3);
@@ -348,10 +348,10 @@ body {
 
 .chart-card {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(230, 57, 70, 0.25);
     border-radius: var(--radius-md);
     padding: 20px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm), var(--glow-red);
 }
 
 .chart-card h3 {
@@ -377,10 +377,10 @@ body {
 /* ========== Table ========== */
 .table-section {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(230, 57, 70, 0.25);
     border-radius: var(--radius-md);
     padding: 20px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm), var(--glow-red);
     margin-bottom: 24px;
 }
 
